@@ -1,0 +1,11 @@
+{
+  "name": "bendalgorab",
+  "version": "1.0.0",
+  "description": "backend per un sistema a microservizi basilare. Test fornito da Algorab",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Francesco Micunco",
+  "license": "ISC"
+}
