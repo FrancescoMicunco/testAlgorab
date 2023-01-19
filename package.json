@@ -1,11 +1,24 @@
 {
-  "name": "bendalgorab",
-  "version": "1.0.0",
-  "description": "backend per un sistema a microservizi basilare. Test fornito da Algorab",
-  "main": "index.js",
-  "scripts": {
-    "test": "test"
-  },
-  "author": "Francesco Micunco",
-  "license": "ISC"
+    "name": "bendalgorab",
+    "version": "1.0.0",
+    "description": "backend per un sistema a microservizi basilare. Test fornito da Algorab",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "test": "test",
+        "dev": "nodemon -r dotenv/config ./src/server.js",
+        "start": "node ./src/server.js"
+    },
+    "author": "Francesco Micunco",
+    "license": "ISC",
+    "dependencies": {
+        "cors": "^2.8.5",
+        "dotenv": "^16.0.3",
+        "express": "^4.18.2",
+        "express-list-endpoints": "^6.0.0",
+        "mongoose": "^6.8.4"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.20"
+    }
 }
