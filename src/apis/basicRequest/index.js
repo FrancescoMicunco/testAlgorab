@@ -26,7 +26,7 @@ export const sendMessage = async(req, res, next) => {
 
         const msg = { id: data._id, value: sumValues };
 
-        console.log("msg", msg);
+        console.log("msg inviato al BUS queue", msg);
 
         if (!id || !sumValues) {
             console.log("waiting for a message");
