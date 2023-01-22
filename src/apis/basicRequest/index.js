@@ -7,33 +7,38 @@ import axios from "axios";
 
 export const sendMessage = async(req, res, next) => {
     const message = req.body.message;
-    console.log("message => ", message);
+
     const valuesArray = message.map((v) => v.value); //recuperiamo tutti i valori con chiave "value" e li salviamo in un array
+
     const sumValues = lodash.sum(valuesArray).toString(); //eseguiamo la somma dei valori e prepariamo il risultato per il bus messangere
-
-    const msg = { value: sumValues };
-    console.log("msg =>", msg);
-
-    // if (!sumValues) {
-    //     console.log("waiting for a message");
-    // } else {
-    //     busController(msg);
-    // }
 
     try {
         const newMessage = new MessageModel(req.body);
 
         const { _id } = await newMessage.save();
+
         //restituiamo al frontend solo l'indicazione dell'id del singolo messaggio
         res.send({ _id });
-        const id = _id.toString();
 
-        getMessage(id);
+        const id = _id.toString(); //eseguo il parsing dell'oggetto _id
+
+        const data = await getMessage(id); // uso l'id per recuperare il record appena salvato
+
+        const msg = { id: data._id, value: sumValues };
+
+        console.log("msg", msg);
+
+        if (!id || !sumValues) {
+            console.log("waiting for a message");
+        } else {
+            busController(msg.toString());
+        }
+
         // ============== recall del dato appena archiviato nel DB ==========
         async function getMessage(id) {
             try {
                 const response = await axios.get(`http://localhost:3000/message/${id}`);
-                console.log(response.data);
+                return response.data;
             } catch (error) {
                 console.error(error);
             }
@@ -43,6 +48,7 @@ export const sendMessage = async(req, res, next) => {
     }
 };
 
+// funzione backend per restituire l'item richiesto
 export const getMessagesById = async(req, res, next) => {
     try {
         const thisMessage = await MessageModel.findById(req.params.id);
@@ -56,6 +62,8 @@ export const getMessagesById = async(req, res, next) => {
         next(error);
     }
 };
+
+// funzione BUS controller dei messaggi
 
 const busController = (msg) => {
     amqp.connect("amqp://localhost", function(error0, connection) {
