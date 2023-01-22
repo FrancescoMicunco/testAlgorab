@@ -26,12 +26,12 @@ export const sendMessage = async(req, res, next) => {
 
         const msg = { id: data._id, value: sumValues };
 
-        console.log("msg inviato al BUS queue", msg);
+        console.log("msg inviato al BUS queue", { msg });
 
         if (!id || !sumValues) {
             console.log("waiting for a message");
         } else {
-            busController(msg.toString());
+            busController(msg);
         }
 
         // ============== recall del dato appena archiviato nel DB ==========
@@ -79,11 +79,7 @@ const busController = (msg) => {
 
             channel.assertQueue(queue, { durable: false });
 
-            channel.sendToQueue(queue, Buffer.from(msg));
+            channel.sendToQueue(queue, Buffer.from(JSON.stringify(msg)));
         });
-        setTimeout(function() {
-            connection.close();
-            process.exit(0);
-        }, 500);
     });
 };
