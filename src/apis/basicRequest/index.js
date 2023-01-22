@@ -81,5 +81,9 @@ const busController = (msg) => {
 
             channel.sendToQueue(queue, Buffer.from(msg));
         });
+        setTimeout(function() {
+            connection.close();
+            process.exit(0);
+        }, 500);
     });
 };
