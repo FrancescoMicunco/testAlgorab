@@ -2,6 +2,7 @@ import MessageModel from "./schema.js";
 import lodash from "lodash";
 import amqp from "amqplib/callback_api.js";
 import axios from "axios";
+import { busController } from "../../lib/middlewares/buscontroller.js";
 
 // creaiamo la funzione utile a gestire le richieste dirette al DB principale.
 
@@ -64,22 +65,3 @@ export const getMessagesById = async(req, res, next) => {
 };
 
 // funzione BUS controller dei messaggi
-
-const busController = (msg) => {
-    amqp.connect("amqp://localhost", function(error0, connection) {
-        if (error0) {
-            throw error0;
-        }
-        connection.createChannel(function(error1, channel) {
-            if (error1) {
-                throw error1;
-            }
-
-            const queue = "sum";
-
-            channel.assertQueue(queue, { durable: false });
-
-            channel.sendToQueue(queue, Buffer.from(JSON.stringify(msg)));
-        });
-    });
-};
